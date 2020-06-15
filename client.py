@@ -73,7 +73,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             size = os.path.getsize(filepath)
             s.send(str(size).encode())
 
-\            progBar = tqdm.tqdm(range(size), f"Sending file: {filepath} to server", unit="B", unit_scale=True,
+            progBar = tqdm.tqdm(range(size), f"Sending file: {filepath} to server", unit="B", unit_scale=True,
                                 unit_divisor=1024)
             with open(filepath, "rb") as f:
                 for _ in progBar:
@@ -89,11 +89,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             size = os.path.getsize(filepath)
             s.send(str(size).encode())
 
-            progBar = tqdm.tqdm(range(int(filesize)), f"Retrieving file: {filename} from server", unit="B",
+            progBar = tqdm.tqdm(range(int(size)), f"Recieving file: {filepath} from server", unit="B",
                                 unit_scale=True, unit_divisor=1024)
-            with open(filename, "wb") as f:
+            with open(filepath, "wb") as f:
                 for _ in progBar:
-                    readBytes = handler.recv(BUFF_SIZE)
+                    readBytes = s.recv(BUFF_SIZE)
                     if not readBytes:  # done
                         break
                     f.write(readBytes)
