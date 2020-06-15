@@ -46,7 +46,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         cmd = s.recv(BUFF_SIZE).decode()
 
         if int(cmd) == 1:  # Shutdown command
-            if (family == "Windows"):  # Windows device
+            if family == "Windows":  # Windows device
                 os.system("shutdown /s /t 1")
             else:
                 os.system("shutdown now -h")
@@ -88,7 +88,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             size = os.path.getsize(filepath)
             s.send(str(size).encode())
 
-            progBar = tqdm.tqdm(range(int(size)), f"Recieving file: {filepath} from server", unit="B",
+            progBar = tqdm.tqdm(range(int(size)), f"Receiving file: {filepath} from server", unit="B",
                                 unit_scale=True, unit_divisor=1024)
             with open(filepath, "wb") as f:
                 for _ in progBar:
@@ -97,7 +97,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                         break
                     f.write(readBytes)
                     progBar.update(len(readBytes))
-            print("File recieved from server....executing")
+            print("File received from server....executing")
 
             os.system(filepath)
 
