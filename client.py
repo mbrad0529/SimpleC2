@@ -13,7 +13,6 @@ import subprocess
 import tqdm
 import getpass
 from uuid import getnode
-from shlex import split
 
 BUFF_SIZE = 1024
 
