@@ -70,7 +70,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print("Under user: " + user)
             print("In CWD: " + cwd)
 
-
         elif choice == 4:
             handler.send('4'.encode())
             filepath = input("Enter remote filepath: ")
