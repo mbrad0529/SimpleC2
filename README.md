@@ -41,8 +41,8 @@ _Known Issues_
 * Upload/Download Progress Bars sometimes fail to update properly.
 
 **2.0**
-* Added ProcessList functionality, retrieves process list from remote machine, sorted by PID, and returns PID, User context, 
-Status, and Process Name.
+* Added ProcessList functionality, retrieves process list from remote machine, sorted by PID, and returns PID, Status, User context, 
+and Process Name.
 * Added Persistence module, script can now persist through Registry key added to the Run subkey of HKEY_CURRENT_USER,
 causing the script to be re-run with the same arguments on reboot. On *nix based systems, this effect is achieved through adding a
 Cron job via editing Crontab with python-crontab module, again setting the script to be re-run on reboot
