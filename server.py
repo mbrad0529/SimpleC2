@@ -99,7 +99,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
         elif choice == 5:  # Retrieve Process List
             handler.send('5'.encode())
-            print("Remote Process List: [PID] [USER] [STATUS] [NAME]")
+            print("Remote Process List: [PID] [STATUS] [USER] [NAME]")
 
             numProcs = int(handler.recv(BUFF_SIZE).decode())
 
