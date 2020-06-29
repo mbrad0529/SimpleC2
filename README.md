@@ -53,3 +53,4 @@ _Known Issues_
 
 * Not all System command supported, for example a simple 'dir' on a Windows client returns WINERROR #2 FILE NOT FOUND. Other commands function fine such as ipconfig.
 * Upload/Download Progress Bars sometimes fail to update properly.
+* Server module sometimes hangs when run and fails to display the command menu.
